@@ -1,0 +1,62 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("books_dataset.csv")
+
+
+print("First 5 Rows:")
+print(df.head())
+
+print("\nDataset Information:")
+df.info()
+
+
+print("\nStatistical Summary:")
+print(df.describe(include='all'))
+
+
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+print("\nDuplicate Values:")
+print(df.duplicated().sum())
+
+df["Price"] = df["Price"].astype(str).str.extract(r'(\d+\.\d+)')[0]
+df["Price"] = pd.to_numeric(df["Price"], errors="coerce")
+
+print("\nAverage Price:")
+print(df["Price"].mean())
+
+print("\nHighest Price Book:")
+print(df.loc[df["Price"].idxmax()])
+
+print("\nLowest Price Book:")
+print(df.loc[df["Price"].idxmin()])
+
+print("\nRating Counts:")
+print(df["Rating"].value_counts())
+
+
+print("\nAvailability Counts:")
+print(df["Availability"].value_counts())
+
+plt.figure(figsize=(6,4))
+plt.hist(df["Price"], bins=10)
+plt.title("Price Distribution")
+plt.xlabel("Price")
+plt.ylabel("Frequency")
+plt.show()
+
+
+plt.figure(figsize=(6,4))
+df["Rating"].value_counts().plot(kind="bar")
+plt.title("Book Rating Distribution")
+plt.xlabel("Rating")
+plt.ylabel("Number of Books")
+plt.show()
+
+
+df.to_csv("books_dataset_cleaned.csv", index=False)
+
+print("\nEDA Completed Successfully!")
+print("Cleaned dataset saved as books_dataset_cleaned.csv")
